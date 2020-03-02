@@ -2,16 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const logger = require('morgan');
 const app = express();
 const port = 3000;
-const dburl = 'mongodb+srv://test_username:z1x2c3a4s5d6@cluster0-rd3uc.mongodb.net/test?retryWrites=true&w=majority';
 
 // DB setting
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect(dburl);
+mongoose.connect(process.env.MONGO_DB);
 const db = mongoose.connection;
 
 // DB connection
@@ -29,6 +29,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+app.use(logger('short'));
 
 //Routes
 app.use('/', require('./routes/home'));
